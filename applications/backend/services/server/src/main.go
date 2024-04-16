@@ -25,6 +25,7 @@ import (
 	"github.com/codefly-dev/core/configurations/standards"
 	"github.com/codefly-dev/core/shared"
 	"github.com/codefly-dev/go-grpc/base/pkg/adapters"
+	"os/exec"
 	"os/signal"
 	"syscall"
 
@@ -50,6 +51,13 @@ func WithWork(w Work) {
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	cmd := exec.Command("ls", "/")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(out))
 
 	w, err := codefly.Init(ctx)
 	if err != nil {

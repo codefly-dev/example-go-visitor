@@ -5,7 +5,7 @@ project: go-visitors
 agent:
     kind: codefly:service
     name: redis
-    version: 0.0.32
+    version: 0.0.35
     publisher: codefly.dev
 service-dependencies: []
 project-configuration-dependencies: []
@@ -18,5 +18,5 @@ spec:
     debug: false
     persist: false
     read-replica: true
-    silent: false
+    silent: true
     watch: false

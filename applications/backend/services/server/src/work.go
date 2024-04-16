@@ -48,5 +48,6 @@ func doWork(ctx context.Context) (Clean, error) {
 	service.WithCache(cache)
 
 	adapters.SetService(service)
+	w.Info("setup completed successfully")
 	return func() {}, nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/codefly-dev/go-grpc/base/pkg/business"
 	"github.com/go-redis/redis/v8"
 	"net/url"
@@ -22,7 +23,7 @@ func (c *RedisCache) GetStatistics(ctx context.Context) (*business.Statistics, e
 		if errors.Is(err, redis.Nil) {
 			return nil, nil
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to get cache statistics: %w", err)
 	}
 	var model business.Statistics
 	err = json.Unmarshal([]byte(val), &model)
@@ -55,11 +56,17 @@ func NewRedisClient(connectionString string) (*redis.Client, error) {
 		password, _ = u.User.Password()
 	}
 
-	return redis.NewClient(&redis.Options{
+	client := redis.NewClient(&redis.Options{
 		Addr:     u.Host,
 		Password: password, // no password set
 		DB:       0,        // use default DB
-	}), nil
+	})
+	err = client.Ping(context.Background()).Err()
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+
 }
 
 func NewRedisCache(connectionWrite string, connectionRead string) (*RedisCache, error) {
@@ -67,6 +74,7 @@ func NewRedisCache(connectionWrite string, connectionRead string) (*RedisCache, 
 	if err != nil {
 		return nil, err
 	}
+
 	write, err := NewRedisClient(connectionWrite)
 	if err != nil {
 		return nil, err

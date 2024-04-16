@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"fmt"
 	"github.com/codefly-dev/go-grpc/base/pkg/business"
 	"github.com/codefly-dev/go-grpc/base/pkg/gen"
 	"google.golang.org/grpc/codes"
@@ -35,6 +36,7 @@ func (s *GrpcServer) GetVisitStatistics(ctx context.Context, req *gen.GetVisitSt
 	if err := Validate(req); err != nil {
 		return nil, err
 	}
+	fmt.Println("GetVisitStatistics")
 	stats, err := service.GetStatistics(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
