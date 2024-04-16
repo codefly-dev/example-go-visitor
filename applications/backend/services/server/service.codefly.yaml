@@ -5,7 +5,7 @@ project: go-visitors
 agent:
     kind: codefly:service
     name: go-grpc
-    version: 0.0.101
+    version: 0.0.105
     publisher: codefly.dev
 service-dependencies:
     - name: store
